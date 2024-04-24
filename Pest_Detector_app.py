@@ -35,8 +35,18 @@ if uploaded_file is not None:
     
     # Call the Gemini API and handle the response
     try:
-        response = model.generate_content(["Write a report in the following format: 1. Type/Category of the pest; 2. Number of the pest; 3. How to deal with it.", image], stream=True)
+        response = model.generate_content(["Please recognize and only the race of the pest in the image. Then write a report in the following format: 1. Type/Race of the pest; 2. Number of the pest shown; 3. How to reduce the pest's damage over the crop.", image], stream=True)
         response.resolve()
-        to_markdown(response.text)  # Display the response from the API
+        lines = response.text.split('\n')
+        print(lines)
+        report_1 = f"**Pest:** {lines[0][3:]}"
+        st.markdown(report_1)
+        report_2 = f"**Number:** {lines[1][3:]}"
+        st.markdown(report_2)
+        report_3 = f"**Advice:** {lines[2][3:]}"
+        st.markdown(report_3)
+
+
+
     except Exception as e:
         st.error(f"Failed to call Gemini API: {str(e)}")
